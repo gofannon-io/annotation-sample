@@ -129,7 +129,6 @@ class ConfigurationProcessorTest {
     }
 
 
-
     @Test
     @DisplayName("shall accept @TheConfParam on String field")
     void acceptConfParamOnInterface() {
@@ -143,8 +142,7 @@ class ConfigurationProcessorTest {
                                         
                         @TheConf(name="confX")
                         public interface ConfX {
-                            @TheConfParam(  name="threshold",
-                                            defaultValue="42",
+                            @TheConfParam(  defaultValue="42",
                                             description="The Description"
                                          )
                             String THRESHOLD = "confX.threshold";
@@ -173,8 +171,7 @@ class ConfigurationProcessorTest {
                                         
                         @TheConf(name="confX")
                         public interface ConfX {
-                            @TheConfParam(  name="threshold",
-                                            defaultValue="42",
+                            @TheConfParam(  defaultValue="42",
                                             description="The Description"
                                          )
                             int THRESHOLD = 42;
@@ -191,10 +188,8 @@ class ConfigurationProcessorTest {
     }
 
 
-
-
     @Test
-    @DisplayName("shall be cool ")
+    @DisplayName("shall process a valid configuration")
     void full() {
         final JavaFileObject input = JavaFileObjects.forSourceString(
                 "com.example.ConfX",
@@ -206,13 +201,12 @@ class ConfigurationProcessorTest {
                                         
                         @TheConf(name="confX")
                         public interface ConfX {
-                            @TheConfParam(  name="threshold",
-                                            defaultValue="42",
+                            @TheConfParam(  defaultValue="42",
                                             description="The Description"
                                          )
                             String THRESHOLD = "confX.threshold";
                             
-                            @TheConfParam( name="location", defaultValue="Lille", description="the name of a city")
+                            @TheConfParam( defaultValue="Lille", description="the name of a city")
                             String LOCATION = "confX.location";
                         }
                         """
@@ -225,10 +219,10 @@ class ConfigurationProcessorTest {
                 .processedWith(processor)
                 .compilesWithoutError();
 
-        assertThat( processor.getParameterList() )
+        assertThat(processor.getParameterList())
                 .containsExactly(
-                  new Parameter("confX", "confX.threshold", "42", "The Description"),
-                  new Parameter("confX", "location", "Lille", "the name of a city")
+                        new Parameter("confX", "confX.threshold", "42", "The Description"),
+                        new Parameter("confX", "confX.location", "Lille", "the name of a city")
                 );
     }
 

@@ -21,3 +21,7 @@ publishing {
         }
     }
 }
+
+wrapper {
+    gradleVersion="8.1.1"
+}

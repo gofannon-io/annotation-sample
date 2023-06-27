@@ -5,11 +5,11 @@ import io.gofannon.apl.annotation.TheConfParam;
 
 import javax.lang.model.element.*;
 
-public class ConfigurationVisitor implements ElementVisitor<ConfigurationVisitResult, ConfigurationContext> {
+public class ConfigurationVisitor implements ElementVisitor<ConfigurationParameterMetadataExtractionResult, ConfigurationContext> {
 
 
     @Override
-    public ConfigurationVisitResult visit(Element ge, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visit(Element ge, ConfigurationContext configurationContext) {
         if (ge instanceof VariableElement) {
             VariableElement e = (VariableElement) ge;
             TheConfParam annotation = e.getAnnotation(TheConfParam.class);
@@ -37,12 +37,12 @@ public class ConfigurationVisitor implements ElementVisitor<ConfigurationVisitRe
     }
 
     @Override
-    public ConfigurationVisitResult visitPackage(PackageElement e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitPackage(PackageElement e, ConfigurationContext configurationContext) {
         return null;
     }
 
     @Override
-    public ConfigurationVisitResult visitType(TypeElement e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitType(TypeElement e, ConfigurationContext configurationContext) {
         TheConf annotation = e.getAnnotation(TheConf.class);
         if (annotation != null) {
             configurationContext.setCurrentConfigurationName(annotation.name());
@@ -51,11 +51,11 @@ public class ConfigurationVisitor implements ElementVisitor<ConfigurationVisitRe
                     this.visit((VariableElement) ee, configurationContext);
             });
         }
-        return new ConfigurationVisitResult(configurationContext.getParameterList());
+        return new ConfigurationParameterMetadataExtractionResult(configurationContext.getParameterList());
     }
 
     @Override
-    public ConfigurationVisitResult visitVariable(VariableElement e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitVariable(VariableElement e, ConfigurationContext configurationContext) {
         TheConfParam annotation = e.getAnnotation(TheConfParam.class);
         if (annotation != null) {
             String defaultValue = annotation.defaultValue();
@@ -73,17 +73,17 @@ public class ConfigurationVisitor implements ElementVisitor<ConfigurationVisitRe
     }
 
     @Override
-    public ConfigurationVisitResult visitExecutable(ExecutableElement e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitExecutable(ExecutableElement e, ConfigurationContext configurationContext) {
         return null;
     }
 
     @Override
-    public ConfigurationVisitResult visitTypeParameter(TypeParameterElement e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitTypeParameter(TypeParameterElement e, ConfigurationContext configurationContext) {
         return null;
     }
 
     @Override
-    public ConfigurationVisitResult visitUnknown(Element e, ConfigurationContext configurationContext) {
+    public ConfigurationParameterMetadataExtractionResult visitUnknown(Element e, ConfigurationContext configurationContext) {
         return null;
     }
 }
