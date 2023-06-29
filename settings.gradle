@@ -1,0 +1,5 @@
+rootProject.name = 'annotation-sample'
+
+include 'annotations'
+include 'annotation-processor'
+include 'annotation-test'

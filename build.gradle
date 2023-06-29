@@ -1,0 +1,10 @@
+allprojects {
+    group = 'io.gofannon.apl'
+    version = '1.0-SNAPSHOT'
+}
+
+
+
+wrapper {
+    gradleVersion="8.1.1"
+}

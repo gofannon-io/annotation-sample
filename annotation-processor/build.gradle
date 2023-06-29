@@ -3,8 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'io.gofannon.apl'
-version = '1.0-SNAPSHOT'
+
 
 repositories {
     mavenLocal()
@@ -33,8 +32,4 @@ publishing {
             from components.java
         }
     }
-}
-
-wrapper {
-    gradleVersion="8.1.1"
 }
