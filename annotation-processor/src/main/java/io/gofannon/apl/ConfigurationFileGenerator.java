@@ -7,8 +7,6 @@ import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class ConfigurationFileGenerator {
@@ -32,9 +30,10 @@ class ConfigurationFileGenerator {
                     "META-INF/configuration/the-configuration.properties");
 
             try (OutputStream out = builderFile.openOutputStream();
-                 PrintWriter writer = new PrintWriter(out, true, StandardCharsets.UTF_8)) {
+                 PropertiesGenerator propertiesGenerator = new PropertiesGenerator(out)
+            ) {
 
-                generateConfigurationFile(writer);
+                generateConfigurationFile(propertiesGenerator);
 
             } catch (IOException ex) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, ex.getMessage());
@@ -49,18 +48,15 @@ class ConfigurationFileGenerator {
         }
     }
 
-    private void generateConfigurationFile(PrintWriter printer) throws IOException {
+
+    private void generateConfigurationFile(PropertiesGenerator propertiesGenerator) throws IOException {
         for (Parameter parameter : parameterList) {
-            printer.println("# Parameter " + parameter.parameter());
-            String[] descriptionLines = parameter.description().replaceAll("\r", "").split("\n");
-            for (String descriptionLine : descriptionLines) {
-                printer.println("# " + descriptionLine);
-            }
-            printer.println("# " + parameter.parameter() + " = " + parameter.defaultValue());
-            printer.println(parameter.parameter() + " = " + parameter.defaultValue());
-            printer.println();
-            printer.println();
+            propertiesGenerator
+                    .comment("Parameter " + parameter.parameter())
+                    .comment(parameter.description())
+                    .commentedProperty(parameter.parameter(), parameter.defaultValue())
+                    .property(parameter.parameter(), parameter.defaultValue())
+                    .skipLines(2);
         }
     }
-
 }
